@@ -1,0 +1,41 @@
+# Configuration for AWS SAM
+
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  AccountCreationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: com.example.AccountCreationHandler
+      Runtime: java11
+      CodeUri: target/inventory-management-1.0.jar
+      MemorySize: 512
+      Timeout: 10
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /create-account/{userId}
+            Method: post
+
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: UserTable
+      AttributeDefinitions:
+        - AttributeName: userId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+Outputs:
+  AccountCreationFunction:
+    Description: "Lambda Function ARN"
+    Value: !GetAtt AccountCreationFunction.Arn
+  DynamoDBTable:
+    Description: "DynamoDB Table Name"
+    Value: !Ref DynamoDBTable
