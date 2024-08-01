@@ -3,10 +3,10 @@ A custom serverless inventory management system using Java, AWS Lambda, AWS SAM,
 
 
 # Set Up Your Environment
-Install AWS CLI: Ensure the AWS CLI is installed and configured.
+Install AWS CLI: Install and configure to connect to your AWS environment.
 
-Install AWS SAM CLI: For deploying and managing serverless applications.
+Install AWS SAM CLI: Configure for deploying and managing the application.
 
-Install Java JDK: Ensure Java Development Kit is installed.
+Install Java JDK: Language this is being built in.
 
 Install Maven: For building Java applications.
