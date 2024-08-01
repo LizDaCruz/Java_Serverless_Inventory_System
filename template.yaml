@@ -1,12 +1,10 @@
-# Configuration for AWS SAM
-
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Resources:
-  AccountCreationFunction:
+  AddProductFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: com.example.AccountCreationHandler
+      Handler: com.example.AddProductHandler
       Runtime: java11
       CodeUri: target/inventory-management-1.0.jar
       MemorySize: 512
@@ -15,27 +13,63 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /create-account/{userId}
+            Path: /add-product/{productId}
             Method: post
 
-  DynamoDBTable:
+  RemoveProductFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: com.example.RemoveProductHandler
+      Runtime: java11
+      CodeUri: target/inventory-management-1.0.jar
+      MemorySize: 512
+      Timeout: 10
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /remove-product/{productId}
+            Method: delete
+
+  UpdateProductFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: com.example.UpdateProductHandler
+      Runtime: java11
+      CodeUri: target/inventory-management-1.0.jar
+      MemorySize: 512
+      Timeout: 10
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /update-product/{productId}
+            Method: put
+
+  ProductTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: UserTable
+      TableName: ProductTable
       AttributeDefinitions:
-        - AttributeName: userId
+        - AttributeName: productId
           AttributeType: S
       KeySchema:
-        - AttributeName: userId
+        - AttributeName: productId
           KeyType: HASH
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
 
 Outputs:
-  AccountCreationFunction:
-    Description: "Lambda Function ARN"
-    Value: !GetAtt AccountCreationFunction.Arn
-  DynamoDBTable:
+  AddProductFunction:
+    Description: "Add Product Lambda Function ARN"
+    Value: !GetAtt AddProductFunction.Arn
+  RemoveProductFunction:
+    Description: "Remove Product Lambda Function ARN"
+    Value: !GetAtt RemoveProductFunction.Arn
+  UpdateProductFunction:
+    Description: "Update Product Lambda Function ARN"
+    Value: !GetAtt UpdateProductFunction.Arn
+  ProductTable:
     Description: "DynamoDB Table Name"
-    Value: !Ref DynamoDBTable
+    Value: !Ref ProductTable
